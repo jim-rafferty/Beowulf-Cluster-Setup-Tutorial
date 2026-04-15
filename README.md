@@ -76,6 +76,8 @@ Make sure all the previous steps are followed correctly and that you have all of
 
 ### 2. Setting Up the IP addresses
 
+NOTE - don't bother with steps 1 - 5. Use the router to set a static dns allocation instead.
+
 In order to continue, each computer must have a unique static IP address. For example, in our case, we will use the IP address of the *master* as *192.168.1.5*, *node1* as *192.168.1.6*, and *node2* as *192.168.1.7*, etc. It is not mandatory to use these exact IP addresses but using a consistent IP address assigning might come in handy. Make sure you remember which computer has which IP address.
 
 In order to setup static IP addresses, first make sure that all computers are correctly connected via ethernet to the router/switch. If this is confirmed, continue with the setup process. The below steps have to be performed on all the computers, thus disconnect and connect the keyboard and monitor to each computer and continue them.
@@ -124,12 +126,14 @@ The IP addresses must match the IP address of the relevant node. Add all of the 
 A common user must exist across all computers to facilitate with the communication. For this reason, we will create a user called `mpiuser` across all the computers. This username as well as the UUID must be common to facilitate with the SSH authorization. Use the following command to create a user in all computers.
 
 ```
-sudo adduser mpiuser --uid 999
+sudo adduser mpiuser --uid 1005
 ```
 
 If the UUID 999 is already taken, do the same command but with a different number. However make sure that the same UUID is provided across all computers for this user. Also make sure to include a number equal to or more than 999. Make sure to use a consistent password to avoid confusion. (Note that for certain commands, you might need to switch back to the main account; for example, commands that require `sudo` priviledges. Entering the command `exit` will switch you back to the main account.)
 
 ### 4. Setting up the Network File System (NFS)
+
+NOTE - nfs is installed on fedora by default
 
 Network File System (NFS) is a distributed file system protocol that allows a user on a client computer to access files over a network as if those files were on the local computer. With NFS, a user can browse the remote file system, read and write files, and even execute programs located on the remote server. This makes it possible for multiple users to share files and collaborate on projects from different locations.
 
@@ -247,19 +251,32 @@ ssh node1
 
 This should change the prompt from `mpiuser@master:~$ ` to `mpiuser@node1:~$ `. This means that all command executed will be executed inside of the *mpiuser* of the *node1*. For example, the command `echo $HOSTNAME`, will print `node1` instead of `master`. An advantage of this setup is that using the command `systemctl -i poweroff`, you can shutdown each computer remotely when SSH into the specific node. Same should apply for all other nodes.
 
-### 7. Setup Hydra Process Manager
+### 7. Setup Hydra Process Manager - don't bother with this, use openMPI instead
 
-Hydra is a process management system used to manage and monitor processes on a Unix or Linux system. It is designed to be simple to use and can be used to start, stop, and monitor multiple processes at once. Hydra consists of two main components: a daemon process that runs in the background and a command-line interface that allows users to manage processes. The daemon process is responsible for starting and stopping processes, monitoring their status, and responding to commands from the command-line interface.
 
-The Hydra Process Manager is included with the MPICH package, so we need to install MPICH on all computers. To do this, switch between each computer and use the following command to install it. To do this, make sure that the computer is connected to the internet.
+~~Hydra is a process management system used to manage and monitor processes on a Unix or Linux system. It is designed to be simple to use and can be used to start, stop, and monitor multiple processes at once. Hydra consists of two main components: a daemon process that runs in the background and a command-line interface that allows users to manage processes. The daemon process is responsible for starting and stopping processes, monitoring their status, and responding to commands from the command-line interface.~~
+
+~~The Hydra Process Manager is included with the MPICH package, so we need to install MPICH on all computers. To do this, switch between each computer and use the following command to install it. To do this, make sure that the computer is connected to the internet.~~
 
 ```
 sudo apt-get install mpich
 ```
 
-This should install MPICH on all nodes. Once done, network all computers to the correct configuration and continue.
+~~This should install MPICH on all nodes. Once done, network all computers to the correct configuration and continue.~~
 
-Next step is to configure MPICH. To do this, switch to the *master* and switch to *mpiuser*. (Use the command `su mpiuser`) Once in the *mpiuser*, move to the home directory. (Use the command `cd ~`) Now use a text editor to create a file called `hosts`, (Use the command `nano hosts` for *nano*) and enter the hostnames of the nodes you want the processes to run. You can either include the *master* node as a computer node or only use the other nodes. For example, refer below. Once done, save the file. (*Ctrl + X -> Y -> Enter* for nano)
+~~Next step is to configure MPICH. To do this, switch to the *master* and switch to *mpiuser*. (Use the command `su mpiuser`) Once in the *mpiuser*, move to the home directory. (Use the command `cd ~`)~~
+
+Install openMPI:
+
+```
+sudo dnf install openmpi openmpi-devel Lmod
+```
+Add the following line to .bashrc:
+```
+module load mpi/openmpi-x86_64
+```
+
+Now use a text editor to create a file called `hosts`, (Use the command `nano hosts` for *nano*) and enter the hostnames of the nodes you want the processes to run. You can either include the *master* node as a computer node or only use the other nodes. For example, refer below. Once done, save the file. (*Ctrl + X -> Y -> Enter* for nano)
 
 ```
 master
