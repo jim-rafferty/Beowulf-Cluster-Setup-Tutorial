@@ -266,15 +266,20 @@ sudo apt-get install mpich
 
 ~~Next step is to configure MPICH. To do this, switch to the *master* and switch to *mpiuser*. (Use the command `su mpiuser`) Once in the *mpiuser*, move to the home directory. (Use the command `cd ~`)~~
 
-Install openMPI:
+Build openMPI from source as we have different CPU architectures. Unzip the source and cd into that dir, then:
 
 ```
-sudo dnf install openmpi openmpi-devel Lmod
+./configure --prefix=/opt/openmpi --with-pmix=internal --with-prrte=internal  --with-hwloc=internal  --with-libevent=internal  --without-ucx
+make -j<n cores>
+sudo make install
 ```
-Add the following line to .bashrc:
+
+Add the following to .bashrc (only once needed with shared home folder):
 ```
-module load mpi/openmpi-x86_64
+export PATH=/opt/openmpi/bin:$PATH
+export LD_LIBRARY_PATH=/opt/openmpi/lib:$LD_LIBRARY_PATH
 ```
+
 
 Now use a text editor to create a file called `hosts`, (Use the command `nano hosts` for *nano*) and enter the hostnames of the nodes you want the processes to run. You can either include the *master* node as a computer node or only use the other nodes. For example, refer below. Once done, save the file. (*Ctrl + X -> Y -> Enter* for nano)
 
