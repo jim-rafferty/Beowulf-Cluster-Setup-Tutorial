@@ -269,7 +269,7 @@ sudo apt-get install mpich
 Build openMPI from source as we have different CPU architectures. Unzip the source and cd into that dir, then:
 
 ```
-./configure --prefix=/opt/openmpi --with-pmix=internal --with-prrte=internal  --with-hwloc=internal  --with-libevent=internal  --without-ucx
+./configure --prefix=/opt/openmpi --with-pmix=internal --with-prrte=internal  --with-hwloc=internal  --with-libevent=internal
 make -j<n cores>
 sudo make install
 ```
@@ -290,6 +290,14 @@ node2
 ```
 
 The above example will run the programs distributed across *master*, *node1* and *node2*.
+
+### 8. Configure the firewall 
+
+On each compute node, set up the firewall to trust connections from the master node:
+```
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.1.<ip of master>" accept'
+sudo firewall-cmd --reload
+```
 
 ## 6. Running a Sample Program
 
