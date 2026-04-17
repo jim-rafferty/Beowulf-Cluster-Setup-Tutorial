@@ -266,7 +266,14 @@ sudo apt-get install mpich
 
 ~~Next step is to configure MPICH. To do this, switch to the *master* and switch to *mpiuser*. (Use the command `su mpiuser`) Once in the *mpiuser*, move to the home directory. (Use the command `cd ~`)~~
 
-Build openMPI from source as we have different CPU architectures. Unzip the source and cd into that dir, then:
+Build openMPI from source as we have different CPU architectures. 
+Install dependencies:
+```
+sudo dnf group install "development-tools" -y
+sudo dnf install gcc gcc-c++ gcc-gfortran make -y
+```
+
+Unzip the source and cd into that dir, then:
 
 ```
 ./configure --prefix=/opt/openmpi --with-pmix=internal --with-prrte=internal  --with-hwloc=internal  --with-libevent=internal
