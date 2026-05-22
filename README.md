@@ -418,12 +418,19 @@ My rank is 11 and hostname is node2
 My rank is 12 and hostname is node2
 ```
 
-## 6.1 More python
+### 6.1 More python
 
 Probably need some fedora managed packages on each of the cluster nodes:
 
 ```
 sudo dnf install python3-jinja2 python3-dateutil
+```
+
+### 6.2 R
+
+On each node, install R
+```
+sudo dnf install R
 ```
 
 ## 7. Conclusion
