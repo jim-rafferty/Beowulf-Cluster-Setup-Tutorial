@@ -300,9 +300,11 @@ The above example will run the programs distributed across *master*, *node1* and
 
 ### 8. Configure the firewall 
 
-On each compute node, set up the firewall to trust connections from the master node:
+On each compute node, set up the firewall to trust connections from the other nodes:
 ```
 sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.1.<ip of master>" accept'
+sudo firewall-cmd --zone=FedoraServer --permanent --add-source=192.168.1.0/24
+sudo firewall-cmd --zone=FedoraServer --permanent --set-target=ACCEPT
 sudo firewall-cmd --reload
 ```
 
@@ -414,6 +416,14 @@ My rank is 7 and hostname is node1
 My rank is 10 and hostname is node2
 My rank is 11 and hostname is node2
 My rank is 12 and hostname is node2
+```
+
+## 6.1 More python
+
+Probably need some fedora managed packages on each of the cluster nodes:
+
+```
+sudo dnf install python3-jinja2 python3-dateutil
 ```
 
 ## 7. Conclusion
